@@ -7,7 +7,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import lombok.AllArgsConstructor;
@@ -29,7 +28,7 @@ public class Cidade {
 	private String nome;
 	
 	@ManyToOne
-	@JoinColumn(name = "ESTADO_ID")
+	@JoinColumn(nullable = false)
 	private Estado estado;
 	
 }

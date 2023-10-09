@@ -8,7 +8,7 @@ import org.springframework.context.ApplicationContext;
 
 import br.com.food.delivery.ApiDeliveryApplication;
 import br.com.food.delivery.domain.model.Restaurante;
-import br.com.food.delivery.infraestructure.repository.RestauranteRepositoryImpl;
+import br.com.food.delivery.repository.RestauranteRepository;
 
 public class RestauranteMain {
 	public static void main(String[] args) {
@@ -16,8 +16,8 @@ public class RestauranteMain {
 				.web(WebApplicationType.NONE)
 				.run(args);
 		
-		RestauranteRepositoryImpl repository = applicationContext.getBean(RestauranteRepositoryImpl.class);
-		List<Restaurante> restaurantes = repository.todos();	
+		RestauranteRepository repository = applicationContext.getBean(RestauranteRepository.class);
+		List<Restaurante> restaurantes = repository.findAll();	
 		for (Restaurante restaurante : restaurantes) {
 			System.out.println(restaurante.getId() + " " + restaurante.getNome());
 		}

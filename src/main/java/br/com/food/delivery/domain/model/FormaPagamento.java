@@ -25,6 +25,6 @@ public class FormaPagamento {
 	@Column(name = "ID")
 	private Long id;
 	
-	@Column(name = "NOME", nullable = false)
-	private String nome;
+	@Column(name = "DESCRICAO", nullable = false)
+	private String descricao;
 }

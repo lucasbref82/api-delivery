@@ -8,7 +8,7 @@ import org.springframework.context.ApplicationContext;
 
 import br.com.food.delivery.ApiDeliveryApplication;
 import br.com.food.delivery.domain.model.Cozinha;
-import br.com.food.delivery.infraestructure.repository.CozinhaRepositoryImpl;
+import br.com.food.delivery.repository.CozinhaRepository;
 
 public class CozinhaMain {
 	public static void main(String[] args) {
@@ -17,8 +17,8 @@ public class CozinhaMain {
 				.web(WebApplicationType.NONE)
 				.run(args);
 		
-		CozinhaRepositoryImpl cozinhas = applicationContext.getBean(CozinhaRepositoryImpl.class);
-		List<Cozinha> todasCozinhas = cozinhas.todas();
+		CozinhaRepository cozinhas = applicationContext.getBean(CozinhaRepository.class);
+		List<Cozinha> todasCozinhas = cozinhas.findAll();
 		for (Cozinha cozinha : todasCozinhas) {
 			System.out.println(cozinha.getId()+ " " + cozinha.getNome());
 		}
