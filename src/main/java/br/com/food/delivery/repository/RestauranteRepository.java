@@ -1,11 +1,17 @@
 package br.com.food.delivery.repository;
 
+import java.util.List;
+
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import br.com.food.delivery.domain.model.Restaurante;
 
 @Repository
-public interface RestauranteRepository extends JpaRepository<Restaurante, Long>{
-
+public interface RestauranteRepository extends JpaRepository<Restaurante, Long>, JpaSpecificationExecutor<Restaurante>, RestauranteRepositoryQueries{
+	
+	List<Restaurante> consultarPorNome(@Param("nome") String nome);
+	
 }

@@ -50,7 +50,6 @@ public class CidadeController {
 	public ResponseEntity<?> adicionar(@RequestBody Cidade cidade) {
 		try {
 			cidade = cadastroCidade.salvar(cidade);
-
 			return ResponseEntity.status(HttpStatus.CREATED).body(cidade);
 		} catch (EntidadeNaoEncontradaException e) {
 			return ResponseEntity.badRequest().body(e.getMessage());
@@ -81,7 +80,6 @@ public class CidadeController {
 		try {
 			cadastroCidade.excluir(cidadeId);
 			return ResponseEntity.noContent().build();
-
 		} catch (EntidadeNaoEncontradaException e) {
 			return ResponseEntity.notFound().build();
 
