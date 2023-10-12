@@ -17,13 +17,15 @@ import org.springframework.stereotype.Repository;
 import org.springframework.util.StringUtils;
 
 import br.com.food.delivery.domain.model.Restaurante;
+import br.com.food.delivery.repository.RestauranteRepositoryQueries;
 
 @Repository
-public class RestauranteRepositoryImpl {
+public class RestauranteRepositoryImpl implements RestauranteRepositoryQueries{
 
 	@PersistenceContext
 	private EntityManager manager;
 
+	@Override
 	public List<Restaurante> buscarComFiltro(String nome, BigDecimal taxaFreteInicial, BigDecimal taxaFreteFinal) {
 
 		var jpql = new StringBuilder();
@@ -54,6 +56,7 @@ public class RestauranteRepositoryImpl {
 		return query.getResultList();
 	}
 
+	@Override
 	public List<Restaurante> buscarComCriteria(String nome, BigDecimal taxaFreteInicial, BigDecimal taxaFreteFinal) {
 
 		CriteriaBuilder builder = manager.getCriteriaBuilder();

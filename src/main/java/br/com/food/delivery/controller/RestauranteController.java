@@ -2,7 +2,6 @@ package br.com.food.delivery.controller;
 
 import java.util.List;
 
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -12,6 +11,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.com.food.delivery.domain.exception.EntidadeNaoEncontradaException;
@@ -25,58 +25,49 @@ public class RestauranteController {
 
 	@Autowired
 	private RestauranteRepository restauranteRepository;
-	
+
 	@Autowired
-	private RestauranteService cadastroRestaurante;
-	
+	private RestauranteService restauranteService;
+
 	@GetMapping
 	public List<Restaurante> listar() {
 		return restauranteRepository.findAll();
 	}
-	
+
 	@GetMapping("/{restauranteId}")
-	public ResponseEntity<Restaurante> buscar(@PathVariable Long restauranteId) {
-		Restaurante restaurante = restauranteRepository.findById(restauranteId).orElse(null);
-		
-		if (restaurante != null) {
-			return ResponseEntity.ok(restaurante);
+	public ResponseEntity<?> buscar(@PathVariable Long restauranteId) {
+		try {
+			return ResponseEntity.status(HttpStatus.OK).body(restauranteService.buscar(restauranteId));
+		} catch (EntidadeNaoEncontradaException e) {
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
 		}
-		
-		return ResponseEntity.notFound().build();
 	}
-	
+
 	@PostMapping
 	public ResponseEntity<?> adicionar(@RequestBody Restaurante restaurante) {
 		try {
-			restaurante = cadastroRestaurante.salvar(restaurante);
-			
-			return ResponseEntity.status(HttpStatus.CREATED)
-					.body(restaurante);
+			restaurante = restauranteService.salvar(restaurante);
+			return ResponseEntity.status(HttpStatus.CREATED).body(restaurante);
 		} catch (EntidadeNaoEncontradaException e) {
-			return ResponseEntity.badRequest()
-					.body(e.getMessage());
+			return ResponseEntity.badRequest().body(e.getMessage());
 		}
 	}
-	
+
 	@PutMapping("/{restauranteId}")
-	public ResponseEntity<?> atualizar(@PathVariable Long restauranteId,
-			@RequestBody Restaurante restaurante) {
+	public ResponseEntity<?> atualizar(@PathVariable Long restauranteId, @RequestBody Restaurante restaurante) {
 		try {
-			Restaurante restauranteAtual = restauranteRepository.findById(restauranteId).orElse(null);
-			
-			if (restauranteAtual != null) {
-				BeanUtils.copyProperties(restaurante, restauranteAtual, "id");
-				
-				restauranteAtual = cadastroRestaurante.salvar(restauranteAtual);
-				return ResponseEntity.ok(restauranteAtual);
-			}
-			
-			return ResponseEntity.notFound().build();
-		
+			restaurante = restauranteService.atualizar(restaurante, restauranteId);
+			return ResponseEntity.ok(restaurante);
+
 		} catch (EntidadeNaoEncontradaException e) {
-			return ResponseEntity.badRequest()
-					.body(e.getMessage());
+			return ResponseEntity.badRequest().body(e.getMessage());
 		}
 	}
 	
+	@GetMapping("/frete-gratis-e-nome-semelhante")
+	public ResponseEntity<List<Restaurante>> listarComFreteGratisENomeSemelhante(@RequestParam(name = "nome") String nome) {
+		List<Restaurante> restaurantes = restauranteService.listarComFreteGratisENomeSemelhante(nome);
+		return ResponseEntity.ok(restaurantes);
+	}
+
 }

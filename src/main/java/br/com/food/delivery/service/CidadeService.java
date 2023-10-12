@@ -8,6 +8,7 @@ import br.com.food.delivery.domain.exception.EntidadeEmUsoException;
 import br.com.food.delivery.domain.exception.EntidadeNaoEncontradaException;
 import br.com.food.delivery.domain.model.Cidade;
 import br.com.food.delivery.domain.model.Estado;
+import br.com.food.delivery.messages.Messages;
 import br.com.food.delivery.repository.CidadeRepository;
 import br.com.food.delivery.repository.EstadoRepository;
 
@@ -25,7 +26,7 @@ public class CidadeService {
 		Estado estado = estadoRepository.findById(estadoId).orElse(null);
 		if (estado == null) {
 			throw new EntidadeNaoEncontradaException(
-					String.format("Não existe cadastro de estado com código %d", estadoId));
+					String.format(Messages.ESTADO_NAO_ENCONTRATO, estadoId));
 		}
 		cidade.setEstado(estado);
 		return cidadeRepository.save(cidade);
@@ -36,13 +37,12 @@ public class CidadeService {
 			Cidade cidade = cidadeRepository.findById(cidadeId).orElse(null);
 			if (cidade == null) {
 				throw new EntidadeNaoEncontradaException(
-						String.format("Não existe um cadastro de cidade com código %d", cidadeId));
+						String.format(Messages.CIDADE_NAO_ENCONTRADA, cidadeId));
 			}
 			cidadeRepository.delete(cidade);
-
 		} catch (DataIntegrityViolationException e) {
 			throw new EntidadeEmUsoException(
-					String.format("Cidade de código %d não pode ser removida, pois está em uso", cidadeId));
+					String.format(Messages.CIDADE_NAO_PODE_SER_REMOVIDA, cidadeId));
 		}
 	}
 
