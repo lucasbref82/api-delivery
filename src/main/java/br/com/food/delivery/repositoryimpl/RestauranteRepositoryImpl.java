@@ -1,5 +1,7 @@
 package br.com.food.delivery.repositoryimpl;
 
+import static br.com.food.delivery.repository.spec.RestauranteSpecs.*;
+
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -13,10 +15,13 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.StringUtils;
 
 import br.com.food.delivery.domain.model.Restaurante;
+import br.com.food.delivery.repository.RestauranteRepository;
 import br.com.food.delivery.repository.RestauranteRepositoryQueries;
 
 @Repository
@@ -24,6 +29,9 @@ public class RestauranteRepositoryImpl implements RestauranteRepositoryQueries{
 
 	@PersistenceContext
 	private EntityManager manager;
+	
+	@Autowired @Lazy
+	private RestauranteRepository restauranteRepository;
 
 	@Override
 	public List<Restaurante> buscarComFiltro(String nome, BigDecimal taxaFreteInicial, BigDecimal taxaFreteFinal) {
@@ -86,5 +94,11 @@ public class RestauranteRepositoryImpl implements RestauranteRepositoryQueries{
 
 		return manager.createQuery(criteria).getResultList();
 	}
+
+	@Override
+	public List<Restaurante> listarComFreteGratis(String nome) {
+		return restauranteRepository.findAll(comFreteGratis().and(nomeSemelhante(nome)));
+	}
+	
 
 }

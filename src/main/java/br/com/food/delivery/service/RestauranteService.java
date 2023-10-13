@@ -12,7 +12,6 @@ import br.com.food.delivery.domain.model.Restaurante;
 import br.com.food.delivery.messages.Messages;
 import br.com.food.delivery.repository.CozinhaRepository;
 import br.com.food.delivery.repository.RestauranteRepository;
-import static br.com.food.delivery.repository.spec.RestauranteSpecs.*;
 
 @Service
 public class RestauranteService {
@@ -63,8 +62,8 @@ public class RestauranteService {
 		return restauranteRepository.save(restauranteAtual);
 	}
 
-	public List<Restaurante> listarComFreteGratisENomeSemelhante(String nome) {
-		return restauranteRepository.findAll(comFreteGratis().and(nomeSemelhante(nome)));
+	public List<Restaurante> listarComFreteGratis(String nome) {
+		return restauranteRepository.listarComFreteGratis(nome);
 	}
 
 }

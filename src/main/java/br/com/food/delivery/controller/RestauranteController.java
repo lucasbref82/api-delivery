@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import br.com.food.delivery.domain.exception.EntidadeNaoEncontradaException;
 import br.com.food.delivery.domain.model.Restaurante;
-import br.com.food.delivery.repository.RestauranteRepository;
 import br.com.food.delivery.service.RestauranteService;
 
 @RestController
@@ -24,14 +23,12 @@ import br.com.food.delivery.service.RestauranteService;
 public class RestauranteController {
 
 	@Autowired
-	private RestauranteRepository restauranteRepository;
-
-	@Autowired
 	private RestauranteService restauranteService;
 
 	@GetMapping
-	public List<Restaurante> listar() {
-		return restauranteRepository.findAll();
+	public ResponseEntity<List<Restaurante>> listar() {
+		List<Restaurante> restaurantes = restauranteService.listar();
+		return ResponseEntity.ok(restaurantes);
 	}
 
 	@GetMapping("/{restauranteId}")
@@ -66,7 +63,7 @@ public class RestauranteController {
 	
 	@GetMapping("/frete-gratis-e-nome-semelhante")
 	public ResponseEntity<List<Restaurante>> listarComFreteGratisENomeSemelhante(@RequestParam(name = "nome") String nome) {
-		List<Restaurante> restaurantes = restauranteService.listarComFreteGratisENomeSemelhante(nome);
+		List<Restaurante> restaurantes = restauranteService.listarComFreteGratis(nome);
 		return ResponseEntity.ok(restaurantes);
 	}
 
