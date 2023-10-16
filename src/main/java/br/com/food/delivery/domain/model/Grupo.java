@@ -31,6 +31,6 @@ public class Grupo {
 	
 	@Builder.Default
 	@ManyToMany
-	@JoinTable(joinColumns = @JoinColumn(name = "GRUPO_ID"), inverseJoinColumns = @JoinColumn(name = "PERMISSAO_ID"))
+	@JoinTable(name = "GRUPO_PERMISSAO", joinColumns = @JoinColumn(name = "GRUPO_ID"), inverseJoinColumns = @JoinColumn(name = "PERMISSAO_ID"))
 	private List<Permissao> permissoes = new ArrayList<>();
 }
