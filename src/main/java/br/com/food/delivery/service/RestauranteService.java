@@ -53,12 +53,13 @@ public class RestauranteService {
 				() -> new EntidadeNaoEncontradaException(String.format(Messages.RESTAURANTE_NAO_ENCONTRADO, id)));
 
 		Long cozinhaId = restaurante.getCozinha().getId();
-		
-		Cozinha cozinhaAtual = cozinhaRepository.findById(cozinhaId).orElseThrow(
+
+		Cozinha cozinhaAtual = cozinhaRepository.findById(
+				cozinhaId).orElseThrow(
 				() -> new EntidadeNaoEncontradaException(String.format(Messages.COZINHA_NAO_ENCONTRADA, cozinhaId)));
 		
 		restauranteAtual.setCozinha(cozinhaAtual);
-		BeanUtils.copyProperties(restaurante, restauranteAtual, "id");
+		BeanUtils.copyProperties(restaurante, restauranteAtual, "id", "formasPagamentos", "endereco");
 		return restauranteRepository.save(restauranteAtual);
 	}
 
