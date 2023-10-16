@@ -74,7 +74,7 @@ public class Restaurante {
 	
 	@Builder.Default
 	@JsonIgnore	
-	@OneToMany(mappedBy = "produto")
+	@OneToMany
 	private List<Restaurante> restaurantes = new ArrayList<>();
 	
 
