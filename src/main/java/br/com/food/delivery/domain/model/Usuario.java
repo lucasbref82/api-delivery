@@ -39,7 +39,7 @@ public class Usuario {
 	
 	@Builder.Default
 	@ManyToMany
-	@JoinTable(joinColumns = @JoinColumn(name = "USUARIO_ID"), inverseJoinColumns = @JoinColumn(name = "GRUPO_ID"))
+	@JoinTable(name = "USUARIO_GRUPO", joinColumns = @JoinColumn(name = "USUARIO_ID"), inverseJoinColumns = @JoinColumn(name = "GRUPO_ID"))
 	private List<Grupo> grupos = new ArrayList<>();
 }
  
