@@ -75,7 +75,7 @@ public class Restaurante {
 	@Builder.Default
 	@JsonIgnore	
 	@OneToMany
-	private List<Restaurante> restaurantes = new ArrayList<>();
+	private List<Produto> produtos = new ArrayList<>();
 	
 
 
