@@ -48,14 +48,6 @@ public class Restaurante {
 
 	@Column(name = "taxa_frete", nullable = false)
 	private BigDecimal taxaFrete;
-
-	@ManyToOne
-	@JoinColumn(name = "cozinha_id", nullable = false)
-	private Cozinha cozinha;
-	
-	@Embedded
-	@JsonIgnore
-	private Endereco endereco;
 	
 	@CreationTimestamp
 	@Column(nullable = false)
@@ -77,6 +69,13 @@ public class Restaurante {
 	@OneToMany
 	private List<Produto> produtos = new ArrayList<>();
 	
+	@ManyToOne
+	@JoinColumn(name = "cozinha_id", nullable = false)
+	private Cozinha cozinha;
+	
+	@Embedded
+	@JsonIgnore
+	private Endereco endereco;
 
 
 }
