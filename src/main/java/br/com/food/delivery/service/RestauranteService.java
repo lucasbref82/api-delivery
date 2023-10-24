@@ -23,10 +23,7 @@ public class RestauranteService {
 	private CozinhaRepository cozinhaRepository;
 
 	public Restaurante buscar(Long id) throws EntidadeNaoEncontradaException {
-		Restaurante restauranteEncontrado = restauranteRepository.findById(id).orElse(null);
-		if (restauranteEncontrado == null) {
-			throw new EntidadeNaoEncontradaException(String.format(Messages.RESTAURANTE_NAO_ENCONTRADO, id));
-		}
+		Restaurante restauranteEncontrado = this.buscarOuFalhar(id);
 		return restauranteEncontrado;
 	}
 
@@ -36,28 +33,15 @@ public class RestauranteService {
 
 	public Restaurante salvar(Restaurante restaurante) throws EntidadeNaoEncontradaException {
 		Long cozinhaId = restaurante.getCozinha().getId();
-		Cozinha cozinha = cozinhaRepository.findById(cozinhaId).orElse(null);
-
-		if (cozinha == null) {
-			throw new EntidadeNaoEncontradaException(
-					String.format("Não existe cadastro de cozinha com código %d", cozinhaId));
-		}
-
+		Cozinha cozinha = this.buscarOuFalharCozinha(cozinhaId);
 		restaurante.setCozinha(cozinha);
-
 		return restauranteRepository.save(restaurante);
 	}
 
 	public Restaurante atualizar(Restaurante restaurante, Long id) throws EntidadeNaoEncontradaException {
-		Restaurante restauranteAtual = restauranteRepository.findById(id).orElseThrow(
-				() -> new EntidadeNaoEncontradaException(String.format(Messages.RESTAURANTE_NAO_ENCONTRADO, id)));
-
+		Restaurante restauranteAtual = this.buscarOuFalhar(id);
 		Long cozinhaId = restaurante.getCozinha().getId();
-
-		Cozinha cozinhaAtual = cozinhaRepository.findById(
-				cozinhaId).orElseThrow(
-				() -> new EntidadeNaoEncontradaException(String.format(Messages.COZINHA_NAO_ENCONTRADA, cozinhaId)));
-		
+		Cozinha cozinhaAtual = this.buscarOuFalharCozinha(cozinhaId);
 		restauranteAtual.setCozinha(cozinhaAtual);
 		BeanUtils.copyProperties(restaurante, restauranteAtual, "id", "formasPagamentos", "endereco");
 		return restauranteRepository.save(restauranteAtual);
@@ -65,6 +49,16 @@ public class RestauranteService {
 
 	public List<Restaurante> listarComFreteGratis(String nome) {
 		return restauranteRepository.listarComFreteGratis(nome);
+	}
+
+	public Restaurante buscarOuFalhar(Long id) throws EntidadeNaoEncontradaException {
+		return restauranteRepository.findById(id).orElseThrow(
+				() -> new EntidadeNaoEncontradaException(String.format(Messages.RESTAURANTE_NAO_ENCONTRADO, id)));
+	}
+
+	public Cozinha buscarOuFalharCozinha(Long id) throws EntidadeNaoEncontradaException {
+		return cozinhaRepository.findById(id).orElseThrow(
+				() -> new EntidadeNaoEncontradaException(String.format(Messages.COZINHA_NAO_ENCONTRADA, id)));
 	}
 
 }
