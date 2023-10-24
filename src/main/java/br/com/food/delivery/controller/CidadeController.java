@@ -2,10 +2,9 @@ package br.com.food.delivery.controller;
 
 import java.util.List;
 
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -13,9 +12,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ResponseStatusException;
 
-import br.com.food.delivery.domain.exception.EntidadeEmUsoException;
 import br.com.food.delivery.domain.exception.EntidadeNaoEncontradaException;
 import br.com.food.delivery.domain.model.Cidade;
 import br.com.food.delivery.service.CidadeService;
@@ -28,7 +28,7 @@ public class CidadeController {
 	private br.com.food.delivery.repository.CidadeRepository cidadeRepository;
 
 	@Autowired
-	private CidadeService cadastroCidade;
+	private CidadeService cidadeService;
 
 	@GetMapping
 	public List<Cidade> listar() {
@@ -36,55 +36,42 @@ public class CidadeController {
 	}
 
 	@GetMapping("/{cidadeId}")
-	public ResponseEntity<Cidade> buscar(@PathVariable Long cidadeId) {
-		Cidade cidade = cidadeRepository.findById(cidadeId).orElse(null);
-
-		if (cidade != null) {
-			return ResponseEntity.ok(cidade);
+	@ResponseStatus(code = HttpStatus.ACCEPTED)
+	public Cidade buscar(@PathVariable Long cidadeId) {
+		try {
+			return cidadeService.buscar(cidadeId);
+		} catch (EntidadeNaoEncontradaException e) {
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage(), e);
 		}
-
-		return ResponseEntity.notFound().build();
 	}
 
 	@PostMapping
-	public ResponseEntity<?> adicionar(@RequestBody Cidade cidade) {
-		try {
-			cidade = cadastroCidade.salvar(cidade);
-			return ResponseEntity.status(HttpStatus.CREATED).body(cidade);
-		} catch (EntidadeNaoEncontradaException e) {
-			return ResponseEntity.badRequest().body(e.getMessage());
-		}
+	@ResponseStatus(value = HttpStatus.CREATED)
+	public Cidade adicionar(@RequestBody Cidade cidade) {
+		cidade = cidadeService.salvar(cidade);
+		return cidade;
+		
 	}
 
 	@PutMapping("/{cidadeId}")
-	public ResponseEntity<?> atualizar(@PathVariable Long cidadeId, @RequestBody Cidade cidade) {
+	@ResponseStatus(code = HttpStatus.ACCEPTED)
+	public Cidade atualizar(@PathVariable Long cidadeId, @RequestBody Cidade cidade) {
 		try {
-			Cidade cidadeAtual = cidadeRepository.findById(cidadeId).orElse(null);
-
-			if (cidadeAtual != null) {
-				BeanUtils.copyProperties(cidade, cidadeAtual, "id");
-
-				cidadeAtual = cadastroCidade.salvar(cidadeAtual);
-				return ResponseEntity.ok(cidadeAtual);
-			}
-
-			return ResponseEntity.notFound().build();
-
+			return cidadeService.atualizar(cidadeId, cidade);
 		} catch (EntidadeNaoEncontradaException e) {
-			return ResponseEntity.badRequest().body(e.getMessage());
-			
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage(), e);
 		}
 	}
 
 	@DeleteMapping("/{cidadeId}")
-	public ResponseEntity<Cidade> remover(@PathVariable Long cidadeId) {
+	@ResponseStatus(code = HttpStatus.NO_CONTENT)
+	public void remover(@PathVariable Long cidadeId) {
 		try {
-			cadastroCidade.excluir(cidadeId);
-			return ResponseEntity.noContent().build();
+			cidadeService.excluir(cidadeId);
 		} catch (EntidadeNaoEncontradaException e) {
-			return ResponseEntity.notFound().build();
-		} catch (EntidadeEmUsoException e) {
-			return ResponseEntity.status(HttpStatus.CONFLICT).build();
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage(), e);
+		} catch (DataIntegrityViolationException e) {
+			throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage(), e);
 		}
 	}
 
