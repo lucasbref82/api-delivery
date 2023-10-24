@@ -22,7 +22,7 @@ public class RestauranteService {
 	@Autowired
 	private CozinhaRepository cozinhaRepository;
 
-	public Restaurante buscar(Long id) {
+	public Restaurante buscar(Long id) throws EntidadeNaoEncontradaException {
 		Restaurante restauranteEncontrado = restauranteRepository.findById(id).orElse(null);
 		if (restauranteEncontrado == null) {
 			throw new EntidadeNaoEncontradaException(String.format(Messages.RESTAURANTE_NAO_ENCONTRADO, id));
@@ -34,7 +34,7 @@ public class RestauranteService {
 		return restauranteRepository.findAll();
 	}
 
-	public Restaurante salvar(Restaurante restaurante) {
+	public Restaurante salvar(Restaurante restaurante) throws EntidadeNaoEncontradaException {
 		Long cozinhaId = restaurante.getCozinha().getId();
 		Cozinha cozinha = cozinhaRepository.findById(cozinhaId).orElse(null);
 
@@ -48,7 +48,7 @@ public class RestauranteService {
 		return restauranteRepository.save(restaurante);
 	}
 
-	public Restaurante atualizar(Restaurante restaurante, Long id) {
+	public Restaurante atualizar(Restaurante restaurante, Long id) throws EntidadeNaoEncontradaException {
 		Restaurante restauranteAtual = restauranteRepository.findById(id).orElseThrow(
 				() -> new EntidadeNaoEncontradaException(String.format(Messages.RESTAURANTE_NAO_ENCONTRADO, id)));
 
