@@ -3,7 +3,6 @@ package br.com.food.delivery.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,9 +13,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.server.ResponseStatusException;
 
-import br.com.food.delivery.domain.exception.EntidadeNaoEncontradaException;
 import br.com.food.delivery.domain.model.Cidade;
 import br.com.food.delivery.service.CidadeService;
 
@@ -38,11 +35,7 @@ public class CidadeController {
 	@GetMapping("/{cidadeId}")
 	@ResponseStatus(code = HttpStatus.ACCEPTED)
 	public Cidade buscar(@PathVariable Long cidadeId) {
-		try {
-			return cidadeService.buscar(cidadeId);
-		} catch (EntidadeNaoEncontradaException e) {
-			throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage(), e);
-		}
+		return cidadeService.buscar(cidadeId);
 	}
 
 	@PostMapping
@@ -50,29 +43,19 @@ public class CidadeController {
 	public Cidade adicionar(@RequestBody Cidade cidade) {
 		cidade = cidadeService.salvar(cidade);
 		return cidade;
-		
+
 	}
 
 	@PutMapping("/{cidadeId}")
 	@ResponseStatus(code = HttpStatus.ACCEPTED)
 	public Cidade atualizar(@PathVariable Long cidadeId, @RequestBody Cidade cidade) {
-		try {
-			return cidadeService.atualizar(cidadeId, cidade);
-		} catch (EntidadeNaoEncontradaException e) {
-			throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage(), e);
-		}
+		return cidadeService.atualizar(cidadeId, cidade);
 	}
 
 	@DeleteMapping("/{cidadeId}")
 	@ResponseStatus(code = HttpStatus.NO_CONTENT)
 	public void remover(@PathVariable Long cidadeId) {
-		try {
-			cidadeService.excluir(cidadeId);
-		} catch (EntidadeNaoEncontradaException e) {
-			throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage(), e);
-		} catch (DataIntegrityViolationException e) {
-			throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage(), e);
-		}
+		cidadeService.excluir(cidadeId);
 	}
 
 }

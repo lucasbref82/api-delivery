@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import br.com.food.delivery.domain.exception.CozinhaNaoEncontradaException;
 import br.com.food.delivery.domain.exception.EntidadeNaoEncontradaException;
 import br.com.food.delivery.domain.model.Cozinha;
 import br.com.food.delivery.messages.Messages;
@@ -20,11 +21,11 @@ public class CozinhaService {
 		return cozinhaRepository.save(cozinha);
 	}
 
-	public void excluir(Long cozinhaId) throws EntidadeNaoEncontradaException {
+	public void excluir(Long cozinhaId) {
 		Cozinha cozinha = cozinhaRepository.findById(cozinhaId).orElse(null);
 		if (cozinha == null) {
-			throw new EntidadeNaoEncontradaException(
-					String.format("Não existe um cadastro de cozinha com código %d", cozinhaId));
+			throw new CozinhaNaoEncontradaException(
+					String.format(Messages.COZINHA_NAO_ENCONTRADA_ID, cozinhaId));
 		}
 		cozinhaRepository.delete(cozinha);
 	}
@@ -39,9 +40,9 @@ public class CozinhaService {
 		return cozinhaAtual;
 	}
 
-	public Cozinha buscarOuFalhar(Long id) throws EntidadeNaoEncontradaException {
+	public Cozinha buscarOuFalhar(Long id) {
 		return cozinhaRepository.findById(id).orElseThrow(
-				() -> new EntidadeNaoEncontradaException(String.format(Messages.COZINHA_NAO_ENCONTRADA, id)));
+				() -> new CozinhaNaoEncontradaException(String.format(Messages.COZINHA_NAO_ENCONTRADA_ID, id)));
 	}
 
 }

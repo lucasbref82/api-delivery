@@ -6,7 +6,8 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import br.com.food.delivery.domain.exception.EntidadeNaoEncontradaException;
+import br.com.food.delivery.domain.exception.CozinhaNaoEncontradaException;
+import br.com.food.delivery.domain.exception.RestauranteNaoEncontradoException;
 import br.com.food.delivery.domain.model.Cozinha;
 import br.com.food.delivery.domain.model.Restaurante;
 import br.com.food.delivery.messages.Messages;
@@ -22,7 +23,7 @@ public class RestauranteService {
 	@Autowired
 	private CozinhaRepository cozinhaRepository;
 
-	public Restaurante buscar(Long id) throws EntidadeNaoEncontradaException {
+	public Restaurante buscar(Long id) {
 		Restaurante restauranteEncontrado = this.buscarOuFalhar(id);
 		return restauranteEncontrado;
 	}
@@ -31,14 +32,14 @@ public class RestauranteService {
 		return restauranteRepository.findAll();
 	}
 
-	public Restaurante salvar(Restaurante restaurante) throws EntidadeNaoEncontradaException {
+	public Restaurante salvar(Restaurante restaurante) {
 		Long cozinhaId = restaurante.getCozinha().getId();
 		Cozinha cozinha = this.buscarOuFalharCozinha(cozinhaId);
 		restaurante.setCozinha(cozinha);
 		return restauranteRepository.save(restaurante);
 	}
 
-	public Restaurante atualizar(Restaurante restaurante, Long id) throws EntidadeNaoEncontradaException {
+	public Restaurante atualizar(Restaurante restaurante, Long id) {
 		Restaurante restauranteAtual = this.buscarOuFalhar(id);
 		Long cozinhaId = restaurante.getCozinha().getId();
 		Cozinha cozinhaAtual = this.buscarOuFalharCozinha(cozinhaId);
@@ -51,14 +52,14 @@ public class RestauranteService {
 		return restauranteRepository.listarComFreteGratis(nome);
 	}
 
-	public Restaurante buscarOuFalhar(Long id) throws EntidadeNaoEncontradaException {
+	public Restaurante buscarOuFalhar(Long id)  {
 		return restauranteRepository.findById(id).orElseThrow(
-				() -> new EntidadeNaoEncontradaException(String.format(Messages.RESTAURANTE_NAO_ENCONTRADO, id)));
+				() -> new RestauranteNaoEncontradoException(String.format(Messages.RESTAURANTE_NAO_ENCONTRADO_ID, id)));
 	}
 
-	public Cozinha buscarOuFalharCozinha(Long id) throws EntidadeNaoEncontradaException {
+	public Cozinha buscarOuFalharCozinha(Long id) {
 		return cozinhaRepository.findById(id).orElseThrow(
-				() -> new EntidadeNaoEncontradaException(String.format(Messages.COZINHA_NAO_ENCONTRADA, id)));
+				() -> new CozinhaNaoEncontradaException(String.format(Messages.COZINHA_NAO_ENCONTRADA_ID, id)));
 	}
 
 }

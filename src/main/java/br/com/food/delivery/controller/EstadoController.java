@@ -13,9 +13,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.server.ResponseStatusException;
 
-import br.com.food.delivery.domain.exception.EntidadeNaoEncontradaException;
 import br.com.food.delivery.domain.model.Estado;
 import br.com.food.delivery.service.EstadoService;
 
@@ -26,7 +24,7 @@ public class EstadoController {
 	@Autowired
 	private EstadoService estadoService;
 
-	@GetMapping	
+	@GetMapping
 	@ResponseStatus(code = HttpStatus.OK)
 	public List<Estado> listar() {
 		return estadoService.listar();
@@ -35,11 +33,7 @@ public class EstadoController {
 	@GetMapping("/{estadoId}")
 	@ResponseStatus(code = HttpStatus.OK)
 	public Estado buscar(@PathVariable Long estadoId) {
-		try {
-			return estadoService.buscar(estadoId);
-		} catch (EntidadeNaoEncontradaException e) {
-			throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage(), e);
-		}
+		return estadoService.buscar(estadoId);
 	}
 
 	@PostMapping
@@ -50,20 +44,12 @@ public class EstadoController {
 
 	@PutMapping("/{estadoId}")
 	public Estado atualizar(@PathVariable Long estadoId, @RequestBody Estado estado) {
-		try {
-			return estadoService.atualizar(estadoId, estado);
-		} catch (EntidadeNaoEncontradaException e) {
-			throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage(), e);
-		}
+		return estadoService.atualizar(estadoId, estado);
 	}
 
 	@DeleteMapping("/{estadoId}")
 	public void remover(@PathVariable Long estadoId) {
-		try {
-			estadoService.excluir(estadoId);
-		} catch (EntidadeNaoEncontradaException e) {
-			throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage(), e);
-		}
+		estadoService.excluir(estadoId);
 	}
 
 }
