@@ -46,7 +46,7 @@ public class Pedido {
 	private LocalDateTime dataEntrega;
 	
 	@ManyToOne
-	@JoinColumn(nullable = false)
+	@JoinColumn(name = "FORMA_PAGAMENTO_ID" ,nullable = false)
 	private FormaPagamento formaPagamento;
 	
 	@ManyToOne
