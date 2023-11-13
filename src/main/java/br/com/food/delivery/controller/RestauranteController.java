@@ -1,9 +1,13 @@
 package br.com.food.delivery.controller;
 
 import java.util.List;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -43,6 +47,7 @@ public class RestauranteController {
 	@PutMapping("/{restauranteId}")
 	public Restaurante atualizar(@PathVariable Long restauranteId, @RequestBody Restaurante restaurante) {
 		restaurante = restauranteService.atualizar(restaurante, restauranteId);
+		
 		return restaurante;
 	}
 
@@ -51,5 +56,15 @@ public class RestauranteController {
 		List<Restaurante> restaurantes = restauranteService.listarComFreteGratis(nome);
 		return restaurantes;
 	}
+	
+	@PatchMapping("/{restauranteId}")
+	public Restaurante atualizarParcial(@PathVariable Long restauranteId,
+			@RequestBody Map<String, Object> campos, HttpServletRequest request) {
+		Restaurante restauranteAtual = restauranteService.buscarOuFalhar(restauranteId);
+		restauranteService.merge(campos, restauranteAtual, request);
+		return atualizar(restauranteId, restauranteAtual);
+	}
+
+
 
 }

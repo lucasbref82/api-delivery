@@ -14,6 +14,7 @@ public class Messages {
 	
 	public static final String COZINHA_NAO_ENCONTRADA_ID = "Não existe um cadastro de cozinha com código %d.";
 	public static final String COZINHA_NAO_ENCONTRADA = "Cozinha informada não existe.";
+	public static final String MSG_GENERICA_USUARIO_FINAL = "Ocorreu um erro no sistema. Tente novamente e se o problema pesistir, entre em contato com o administrador.";
 	
 	private Messages() {
 		

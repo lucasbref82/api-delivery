@@ -16,7 +16,6 @@ public class CozinhaMain {
 				new SpringApplicationBuilder(ApiDeliveryApplication.class)
 				.web(WebApplicationType.NONE)
 				.run(args);
-		
 		CozinhaRepository cozinhas = applicationContext.getBean(CozinhaRepository.class);
 		List<Cozinha> todasCozinhas = cozinhas.findAll();
 		for (Cozinha cozinha : todasCozinhas) {

@@ -1,5 +1,7 @@
 package br.com.food.delivery.exceptionhandler;
 
+import java.time.LocalDateTime;
+
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
@@ -16,9 +18,13 @@ public class Problema {
 	// Status HTTP
 	private Integer status;
 	// Tipo do problema ou URL contendo informações de como resolver o problema
-	private String type;
+	private String tipo;
 	// Titulo do problema
-	private String title;
+	private String titulo;
 	// Detalhe da excessão
-	private String detail;
+	private String detalhes;
+	// Mensagem para usuário final;
+	private String mensagem;
+	// Data Hora do erro
+	private LocalDateTime dataHora;
 }
