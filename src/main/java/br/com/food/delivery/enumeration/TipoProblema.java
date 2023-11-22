@@ -9,7 +9,8 @@ public enum TipoProblema {
 	ERRO_NEGOCIO("/erro-negocio", "Violação de regra de negocio."), 
 	MENSAGEM_INCOMPREENSIVEL("/mensagem-imcompreensivel", "Mensagem imcompreensível."), 
 	PARAMETRO_INVALIDO("/parametro-inválido", "Parâmetro inválido"), 
-	ERRO_DE_SISTEMA("/erro-de-sistema", "Erro interno no sistema.");
+	ERRO_DE_SISTEMA("/erro-de-sistema", "Erro interno no sistema."), 
+	VIOLACAO_CONSTRAINT("/constraint-violada", "Violação de constraint.");
 	
 	private String title;
 	private String uri;
